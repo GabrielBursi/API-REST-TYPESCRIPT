@@ -7,6 +7,6 @@ export const router = Router()
 router.get('/', (req, res) => {res.status(StatusCodes.ACCEPTED).json({msg:'pagina inicial'})})
 
 //*cidades
-router.post('/cidades', CidadesController.create)
+router.post('/cidades', CidadesController.createValidationBody, CidadesController.create)
 
 //*pessoas
