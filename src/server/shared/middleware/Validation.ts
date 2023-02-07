@@ -16,7 +16,6 @@ export const validation: TValidation = ( schemas ) => async (req, res, next) =>{
 
         try {
             schema.validateSync(req[key as TFieldReq] , { abortEarly: false })
-            return next()
         } catch (err) {
             const yupError = err as ValidationError
             const errors: Record<string, string> = {}
