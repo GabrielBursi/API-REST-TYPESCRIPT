@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import * as yup from 'yup';
 import { validation } from '../../shared/middleware';
 
@@ -20,4 +21,6 @@ export const getAllValidationBody = validation({
 
 export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Response) => {
     console.log(req.query);
+
+    res.status(StatusCodes.CREATED).json({ "warning": "Ainda não implementado!" })
 }

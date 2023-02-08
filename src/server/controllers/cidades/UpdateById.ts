@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import * as yup from 'yup';
 import { validation } from "../../shared/middleware"
 
@@ -7,7 +8,7 @@ interface IParamProps {
 }
 
 interface IBodyProps {
-    nome: string
+    name: string
 }
 
 const paramsSchemaValidation: yup.SchemaOf<IParamProps> = yup.object().shape({
@@ -15,7 +16,7 @@ const paramsSchemaValidation: yup.SchemaOf<IParamProps> = yup.object().shape({
 })
 
 const bodySchemaValidation: yup.SchemaOf<IBodyProps> = yup.object().shape({
-    nome: yup.string().required().min(3),
+    name: yup.string().required().min(3),
 })
 
 export const updateByIdValidation = validation({
@@ -25,5 +26,7 @@ export const updateByIdValidation = validation({
 
 export const updateById = async (req: Request<IParamProps, {}, IBodyProps>, res: Response) => {
     console.log(req.params.id);
-    console.log(req.body.nome);
+    console.log(req.body.name);
+
+    res.status(StatusCodes.CREATED).json({ "warning": "Ainda não implementado!" })
 }

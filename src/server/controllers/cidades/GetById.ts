@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import * as yup from 'yup';
 import { validation } from "../../shared/middleware"
 
@@ -17,4 +18,5 @@ export const getByIdValidation = validation({
 export const getById = async (req: Request<IParamProps>, res: Response) => {
     console.log(req.params.id);
     
+    res.status(StatusCodes.CREATED).json({ "warning": "Ainda não implementado!" })
 }
