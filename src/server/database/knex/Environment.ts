@@ -1,17 +1,17 @@
 import { Knex } from "knex"
 import path from 'path'
 
-export const dev_env:Knex.Config = {
+const development: Knex.Config = {
     client: 'sqlite3',
     useNullAsDefault: true,
     connection: {
-        filename: path.resolve(__dirname, '..', '..', '..', '..','database.sqlite')
+        filename: path.resolve(__dirname, '..', '..', '..', '..', 'database.sqlite')
     },
     migrations: {
-        directory: path.resolve(__dirname,'..','migrations')
+        directory: path.resolve(__dirname, '..', 'migrations'),
     },
-    seeds:{
-        directory: path.resolve(__dirname, '..', 'migrations')
+    seeds: {
+        directory: path.resolve(__dirname, '..', 'seeds'),
     },
     pool:{
         afterCreate: (connection: any, done: Function) => {
@@ -21,11 +21,17 @@ export const dev_env:Knex.Config = {
     }
 }
 
-export const test_env:Knex.Config = {
-    ...dev_env,
+const test :Knex.Config = {
+    ...development,
     connection: ':memory:'
 }
 
-export const prod_env:Knex.Config = {
-    ...dev_env
+const production:Knex.Config = {
+    ...development
+}
+
+export {
+    development,
+    test ,
+    production
 }
