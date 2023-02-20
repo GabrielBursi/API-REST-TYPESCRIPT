@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev ./src/index.ts",
-    "production": "node ./build/index.js",
+    "start": "node ./build/index.js",
+    "dev": "ts-node-dev ./src/index.ts",
     "postinstall": "tsc",
     "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback --all",
     "knex:rollback": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
