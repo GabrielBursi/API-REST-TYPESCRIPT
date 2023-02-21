@@ -8,7 +8,7 @@ describe('Cidades - method: post', () => {
             .send({name: 'Teste'})
 
         expect(res1.statusCode).toEqual(StatusCodes.CREATED)
-        expect(typeof res1.body).toEqual('number')
+        expect(res1.body).toHaveProperty('result')
     })
     it('Criar registro com name curto - min: 3', async () => {
         const res1 = await testServer
