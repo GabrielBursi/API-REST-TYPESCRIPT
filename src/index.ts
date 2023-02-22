@@ -2,11 +2,23 @@ import server from "./server/Server";
 import 'dotenv/config'
 import { Knex } from "./server/database/knex";
 
-if(process.env.IS_LOCALHOST !== 'true'){
-    Knex.migrate.latest()
+const startServer = () => {
+    server.listen(process.env.PORT || 3333, () => {
+        console.log(`App rodando na porta ${process.env.PORT || 3333}`);
+    });
+};
+
+if (process.env.IS_LOCALHOST !== 'true') {
+    console.log('Rodando migrations');
+
+    Knex.migrate
+        .latest()
         .then(() => {
-            server.listen(process.env.PORT || 3000)
+            Knex.seed.run()
+                .then(() => startServer())
+                .catch(console.log);
         })
-}else{
-    server.listen(process.env.PORT || 3000)
+        .catch(console.log);
+} else {
+    startServer();
 }
