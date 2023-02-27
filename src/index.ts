@@ -18,7 +18,7 @@ if (process.env.IS_LOCALHOST !== 'true') {
                 .then(() => startServer())
                 .catch(err => console.log('TESTE DEPLOY',err));
         })
-        .catch(console.log);
+        .catch((err => console.log('TESTE DEPLOY2', err)))
 } else {
     startServer();
 }
