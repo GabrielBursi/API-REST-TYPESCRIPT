@@ -5,7 +5,7 @@ import { ETableNames } from '../ETableNames';
 export async function up(knex: Knex) {
     return knex
         .schema
-        .createTable(ETableNames.usuario, table => {
+        .createTable(ETableNames.pessoa, table => {
             table.bigIncrements('id').primary().index();
             table.string('name').index().notNullable();
             table.string('email').unique().notNullable();
@@ -20,15 +20,15 @@ export async function up(knex: Knex) {
                 .onDelete('RESTRICT');
         })
         .then(() => {
-            console.log(`# Created table ${ETableNames.usuario}`);
+            console.log(`# Created table ${ETableNames.pessoa}`);
         });
 }
 
 export async function down(knex: Knex) {
     return knex
         .schema
-        .dropTable(ETableNames.usuario)
+        .dropTable(ETableNames.pessoa)
         .then(() => {
-            console.log(`# Dropped table ${ETableNames.usuario}`);
+            console.log(`# Dropped table ${ETableNames.pessoa}`);
         });
 }
