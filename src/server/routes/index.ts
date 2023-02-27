@@ -1,3 +1,4 @@
+import { UsuariosController } from './../controllers/usuarios/index';
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { CidadesController, PessoasController } from '../controllers'
@@ -19,3 +20,7 @@ router.get('/pessoas/:id', PessoasController.getByIdValidation, PessoasControlle
 router.post('/pessoas', PessoasController.createValidationBody, PessoasController.create)
 router.put('/pessoas/:id', PessoasController.updateByIdValidation, PessoasController.updateById)
 router.delete('/pessoas/:id', PessoasController.deleteByIdValidation, PessoasController.deleteById)
+
+//*usuarios
+router.post('/entrar', UsuariosController.signInValidationBody, UsuariosController.signIn)
+router.post('/cadastrar', UsuariosController.signUpValidationBody, UsuariosController.signUp)
