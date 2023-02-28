@@ -19,14 +19,14 @@ export const signUpValidationBody = validation({
 
 export const signUp = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
 
-    const result = await UsuariosProviders.create(req.body)
+    const user = await UsuariosProviders.create(req.body)
 
-    if (result instanceof Error)
+    if (user instanceof Error)
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: {
-                default: result.message
+                default: user.message
             }
         });
 
-    return res.status(StatusCodes.CREATED).json(result)
+    return res.status(StatusCodes.CREATED).json(user)
 }

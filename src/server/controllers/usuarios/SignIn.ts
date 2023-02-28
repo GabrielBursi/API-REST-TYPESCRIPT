@@ -1,3 +1,4 @@
+import { JWTService } from './../../shared/middleware/JWTService';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from "express";
 import * as yup from 'yup';
@@ -21,22 +22,30 @@ export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
 
     const { email, password } = req.body
 
-    const result = await UsuariosProviders.getByEmail(email)
+    const user = await UsuariosProviders.getByEmail(email)
 
-    if (result instanceof Error)
+    if (user instanceof Error)
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: {
                 default: 'Email ou senha incorretos.'
             }
         });
 
-    const compareHashPassword = await PasswordCrypto.verifyPassword(password, result.password)
-    if (compareHashPassword)
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    const compareHashPassword = await PasswordCrypto.verifyPassword(password, user.password)
+    if (!compareHashPassword)
+        return res.status(StatusCodes.UNAUTHORIZED).json({
             errors: {
                 default: 'Email ou senha incorretos.'
             }
         });
+    
+    const accessToken = JWTService.signIn({uid: user.id})
+    if(accessToken === 'JWT_SECRET_NOT_FOUND')
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors: {
+                default: 'Erro ao gerar token de acesso'
+            }
+        });
 
-    return res.status(StatusCodes.OK).json({ accessToken: 'teste.teste.teste' })
+    return res.status(StatusCodes.OK).json({ accessToken })
 }
