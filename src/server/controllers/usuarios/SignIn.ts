@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { validation } from '../../shared/middleware';
 import { IUsuario } from '../../database/models';
 import { UsuariosProviders } from './../../database/providers/usuarios/index';
+import { PasswordCrypto } from '../../shared/services';
 
 interface IBodyProps extends Omit<IUsuario, 'id' | 'name'> { }
 
@@ -28,13 +29,14 @@ export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
                 default: 'Email ou senha incorretos.'
             }
         });
-    
-    if (password !== result.password)
+
+    const compareHashPassword = await PasswordCrypto.verifyPassword(password, result.password)
+    if (compareHashPassword)
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: {
                 default: 'Email ou senha incorretos.'
             }
         });
 
-    return res.status(StatusCodes.OK).json({ acessToken: 'teste.teste.teste' })
+    return res.status(StatusCodes.OK).json({ accessToken: 'teste.teste.teste' })
 }
