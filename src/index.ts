@@ -10,7 +10,7 @@ const startServer = () => {
 
 if (process.env.IS_LOCALHOST !== 'true') {
     console.log('Rodando migrations');
-    
+
     Knex.migrate
         .latest()
         .then(() => {
@@ -19,9 +19,6 @@ if (process.env.IS_LOCALHOST !== 'true') {
                 .catch(err => console.log('TESTE DEPLOY',err));
         })
         .catch((err => console.log('TESTE DEPLOY2', err)))
-        console.log('Iniciando servidor depois do Knex Migrate');
-        
-        startServer()
 } else {
     startServer();
 }
