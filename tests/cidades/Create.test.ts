@@ -1,20 +1,43 @@
 import { StatusCodes } from 'http-status-codes';
-import { testServer } from './../jest.setup';
 
-describe('Cidades - method: post', () => {
+import { testServer } from '../jest.setup';
+
+
+describe('Cidades - Create', () => {
+    let accessToken = '';
+    beforeAll(async () => {
+        const email = 'create-cidades@gmail.com';
+        await testServer.post('/cadastrar').send({ name: 'Teste', email, password: '123456' });
+        const signInRes = await testServer.post('/entrar').send({ email, password: '123456' });
+
+        accessToken = signInRes.body.accessToken;
+    });
+
+
+    it('Tenta criar um registro sem token de acesso', async () => {
+        const res1 = await testServer
+            .post('/cidades')
+            .send({ name: 'Caxias do Sul' });
+
+        expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
+        expect(res1.body).toHaveProperty('errors.default');
+    });
     it('Cria registro', async () => {
         const res1 = await testServer
             .post('/cidades')
-            .send({name: 'Teste'})
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send({ name: 'Caxias do Sul' });
 
-        expect(res1.statusCode).toEqual(StatusCodes.CREATED)
+        expect(res1.statusCode).toEqual(StatusCodes.CREATED);
         expect(typeof res1.body).toEqual('number');
-    })
-    it('Criar registro com name curto - min: 3', async () => {
+    });
+    it('Tenta criar um registro com nome muito curto', async () => {
         const res1 = await testServer
-        .post('/cidades')
-        .send({name: 'AB'})
+            .post('/cidades')
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send({ name: 'Ca' });
 
-        expect(res1.body).toHaveProperty('errors.body.name')
-    })
-})
+        expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
+        expect(res1.body).toHaveProperty('errors.body.name');
+    });
+});

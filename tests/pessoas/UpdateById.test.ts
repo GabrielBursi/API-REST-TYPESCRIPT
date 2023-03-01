@@ -4,35 +4,67 @@ import { testServer } from '../jest.setup';
 
 
 describe('Pessoas - UpdateById', () => {
+    let accessToken = '';
+    beforeAll(async () => {
+        const email = 'updatebyid-pessoas@gmail.com';
+        await testServer.post('/cadastrar').send({ email, password: '123456', name: 'Teste' });
+        const signInRes = await testServer.post('/entrar').send({ email, password: '123456' });
 
-    let cityId: number | undefined = undefined
+        accessToken = signInRes.body.accessToken;
+    });
+
+    let cidadeId: number | undefined = undefined;
     beforeAll(async () => {
         const resCidade = await testServer
             .post('/cidades')
-            .send({ name: "Cidade" })
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send({ name: 'Teste' });
 
-        cityId = resCidade.body
-    })
+        cidadeId = resCidade.body;
+    });
 
+    it('Tenta atualizar sem usar token de autenticação', async () => {
+        const res1 = await testServer
+            .put('/pessoas/1')
+            .send({
+                cidadeId: 1,
+                email: 'juca@gmail.com',
+                name: 'Juca silva',
+            });
+
+        expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
+        expect(res1.body).toHaveProperty('errors.default');
+    });
     it('Atualiza registro', async () => {
-
         const res1 = await testServer
             .post('/pessoas')
-            .send({ name: 'Pessoas', cityId, email: 'testegetbyid@teste.com' });
-
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send({
+                cidadeId,
+                name: 'Juca silva',
+                email: 'jucaupdate@gmail.com',
+            });
         expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
         const resAtualizada = await testServer
             .put(`/pessoas/${res1.body}`)
-            .send({ name: 'Pessoas', cityId, email: 'testegetbyid@teste.com' });
-
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send({
+                cidadeId,
+                name: 'Juca silva',
+                email: 'jucaupdates@gmail.com',
+            });
         expect(resAtualizada.statusCode).toEqual(StatusCodes.NO_CONTENT);
     });
     it('Tenta atualizar registro que não existe', async () => {
-
         const res1 = await testServer
             .put('/pessoas/99999')
-            .send({ name: 'Pessoas', cityId, email: 'testeupdatebyid@teste.com' });
+            .set({ Authorization: `Bearer ${accessToken}` })
+            .send({
+                cidadeId,
+                email: 'juca@gmail.com',
+                name: 'Juca silva',
+            });
 
         expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
         expect(res1.body).toHaveProperty('errors.default');
