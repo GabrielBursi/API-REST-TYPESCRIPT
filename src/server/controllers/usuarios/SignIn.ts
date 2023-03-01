@@ -1,4 +1,4 @@
-import { JWTService } from './../../shared/middleware/JWTService';
+import { JWTService } from '../../shared/services/JWTService';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from "express";
 import * as yup from 'yup';
