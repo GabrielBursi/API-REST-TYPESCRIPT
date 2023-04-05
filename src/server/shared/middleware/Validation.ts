@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { SchemaOf, ValidationError } from 'yup'
+import { ObjectSchema, ValidationError } from 'yup'
 
 type TFieldReq = 'body' | 'params' | 'query' | 'header'
 
-type AllSchemas = Record<TFieldReq, SchemaOf<any>>
+type AllSchemas = Record<TFieldReq, ObjectSchema<any>>
 
 type TValidation = (schema: Partial<AllSchemas>) => RequestHandler
 
